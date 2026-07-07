@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p 'C:\\\\Users\\\\lxu/.claude/skills')",
+      "Bash(cp -r 'C:\\\\Users\\\\lxu/AppData/Local/Temp/claude/C--Users-lxu-OneDrive-Desktop-myproject/b0bdfe17-00c9-4fda-8fc8-55c0dc61a0da/scratchpad/skills-repo/skills/frontend-design' 'C:\\\\Users\\\\lxu/.claude/skills/frontend-design')",
+      "Read(//c/Users/lxu/.claude/skills/**)"
+    ]
+  }
+}
