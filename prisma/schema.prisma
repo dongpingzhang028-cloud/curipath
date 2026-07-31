@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                   String    @id @default(cuid())
+  name                 String
+  email                String    @unique
+  passwordHash         String
+  createdAt            DateTime  @default(now())
+  resetToken           String?   @unique
+  resetTokenExpiresAt  DateTime?
+  children             Child[]
+  savedProviders       SavedProvider[]
+  calendarSyncs        CalendarSync[]
+  enrollments          Enrollment[]
+}
+
+model Child {
+  id            String         @id @default(cuid())
+  parent        User           @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentId      String
+  name          String
+  birthYear     Int
+  calendarSyncs CalendarSync[]
+}
+
+model Provider {
+  id         String    @id @default(cuid())
+  name       String
+  bio        String
+  imageUrl   String
+  location   String
+  address    String?
+  minAge     Int?      @map("min_age")
+  maxAge     Int?      @map("max_age")
+  websiteUrl String?   @map("websiteURL")
+  keywords   String[]  @default([])
+  googleReviewSummary String?
+  categoryId String?   @map("category")
+  category   Category? @relation(fields: [categoryId], references: [id])
+  savedBy    SavedProvider[]
+  calendarSyncs CalendarSync[]
+  enrollments Enrollment[]
+}
+
+model SavedProvider {
+  id         String   @id @default(cuid())
+  parent     User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentId   String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  providerId String
+  createdAt  DateTime @default(now())
+
+  @@unique([parentId, providerId])
+}
+
+model CalendarSync {
+  id         String   @id @default(cuid())
+  parent     User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentId   String
+  child      Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  childId    String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  providerId String
+  startDate  DateTime
+  endDate    DateTime
+  startTime  String
+  endTime    String
+  createdAt  DateTime @default(now())
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  parent     User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  parentId   String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  providerId String
+  createdAt  DateTime @default(now())
+
+  @@unique([parentId, providerId])
+}
+
+model ProgramType {
+  id       BigInt  @id @default(autoincrement())
+  TypeName String?
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  icon      String
+  providers Provider[]
+}
