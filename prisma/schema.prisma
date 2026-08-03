@@ -45,8 +45,12 @@ model Provider {
   minAge     Int?      @map("min_age")
   maxAge     Int?      @map("max_age")
   websiteUrl String?   @map("websiteURL")
-  keywords   String[]  @default([])
-  googleReviewSummary String?
+  googleRating Float?
+  placeId    String?
+  ratingSource String?
+  ratingSyncedAt DateTime?
+  reviewPros String?
+  reviewCons String?
   categoryId String?   @map("category")
   category   Category? @relation(fields: [categoryId], references: [id])
   savedBy    SavedProvider[]

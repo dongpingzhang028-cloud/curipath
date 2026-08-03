@@ -44,7 +44,6 @@ const providers = [
     imageUrl: "https://images.unsplash.com/photo-1526232761682-d26e03ac148e?w=400&h=250&fit=crop",
     location: "Redmond, WA",
     address: "9040 Willows Road NE, Redmond, WA 98052",
-    keywords: ["soccer", "game"],
     categorySlug: "sports-fitness",
   },
   {

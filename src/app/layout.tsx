@@ -21,7 +21,7 @@ const baloo = Baloo_2({
 });
 
 export const metadata: Metadata = {
-  title: "Sprouty — Find and Book Kids' Classes",
+  title: "CuriPath — Find and Book Kids' Classes",
   description: "Browse and book art, sports, music, coding, and more classes for kids.",
 };
 
@@ -40,7 +40,7 @@ export default function RootLayout({
           <NavBar />
           <main className="flex-1">{children}</main>
           <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
-            Sprouty — find and book classes kids love.
+            CuriPath — find and book classes kids love.
           </footer>
         </Providers>
       </body>

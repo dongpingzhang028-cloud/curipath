@@ -11,12 +11,13 @@ export type QuickViewProvider = {
   imageUrl: string;
   location: string;
   address: string | null;
-  keywords: string[];
   minAge: number | null;
   maxAge: number | null;
   websiteUrl: string | null;
   category: { name: string; icon: string } | null;
-  googleReviewSummary: string | null;
+  googleRating: number | null;
+  reviewPros: string | null;
+  reviewCons: string | null;
 };
 
 export function ProviderQuickView({ provider }: { provider: QuickViewProvider }) {
@@ -41,8 +42,8 @@ export function ProviderQuickView({ provider }: { provider: QuickViewProvider })
             {provider.category.icon} {provider.category.name}
           </span>
         )}
-        <span className="absolute bottom-2 right-2 rounded-full bg-black/60 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-sm transition group-hover:opacity-100">
-          View details
+        <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-md transition group-hover:bg-indigo-700">
+          View details →
         </span>
       </button>
 
@@ -102,27 +103,42 @@ export function ProviderQuickView({ provider }: { provider: QuickViewProvider })
                 </span>
               )}
 
-              {provider.bio && <p className="text-sm text-slate-600">{provider.bio}</p>}
-
-              {provider.keywords.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {provider.keywords.slice(0, 3).map((keyword) => (
-                    <span
-                      key={keyword}
-                      className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700"
-                    >
-                      🏷️ {keyword}
-                    </span>
-                  ))}
+              {provider.bio && (
+                <div>
+                  <span className="text-sm font-semibold text-slate-900">About this program</span>
+                  <p className="mt-1 text-sm text-slate-600">{provider.bio}</p>
                 </div>
               )}
 
-              {provider.googleReviewSummary && (
+              {(provider.googleRating != null || provider.reviewPros || provider.reviewCons) && (
                 <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <span className="text-sm font-semibold text-slate-900">
-                    What other people think about this program
-                  </span>
-                  <p className="mt-1 text-sm text-slate-600">{provider.googleReviewSummary}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-slate-900">
+                      What other people think about this program
+                    </span>
+                    {provider.googleRating != null && (
+                      <span className="inline-flex items-center gap-1 text-sm font-medium text-amber-600">
+                        <span aria-hidden>★</span>
+                        {provider.googleRating.toFixed(1)}
+                      </span>
+                    )}
+                  </div>
+                  {provider.reviewPros && (
+                    <div className="mt-2">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                        👍 What people like
+                      </span>
+                      <p className="mt-0.5 text-sm text-slate-600">{provider.reviewPros}</p>
+                    </div>
+                  )}
+                  {provider.reviewCons && (
+                    <div className="mt-2">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-rose-700">
+                        👎 Worth knowing
+                      </span>
+                      <p className="mt-0.5 text-sm text-slate-600">{provider.reviewCons}</p>
+                    </div>
+                  )}
                 </div>
               )}
 

@@ -1,4 +1,3 @@
-import { formatAgeRange } from "@/lib/format";
 import { SaveProviderButton } from "@/components/SaveProviderButton";
 import { SyncCalendarButton } from "@/components/SyncCalendarButton";
 import { EnrollButton } from "@/components/EnrollButton";
@@ -11,12 +10,13 @@ export type ProviderCardData = {
   imageUrl: string;
   location: string;
   address: string | null;
-  keywords: string[];
   minAge: number | null;
   maxAge: number | null;
   websiteUrl: string | null;
   category: { name: string; icon: string } | null;
-  googleReviewSummary: string | null;
+  googleRating: number | null;
+  reviewPros: string | null;
+  reviewCons: string | null;
 };
 
 export function ProviderCard({
@@ -37,14 +37,6 @@ export function ProviderCard({
           <span aria-hidden>📍</span>
           {provider.location}
         </p>
-
-        {provider.minAge != null && provider.maxAge != null && (
-          <div className="mt-2 flex flex-wrap gap-2">
-            <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700">
-              {formatAgeRange(provider.minAge, provider.maxAge)}
-            </span>
-          </div>
-        )}
 
         <div className="mt-3 flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
