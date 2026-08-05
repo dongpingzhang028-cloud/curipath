@@ -1,9 +1,9 @@
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { ProviderCard } from "@/components/ProviderCard";
 import { ExploreFilters } from "@/components/ExploreFilters";
-import { AllLocationsMap, type LocationPin } from "@/components/AllLocationsMap";
+import { ExploreResults } from "@/components/ExploreResults";
+import type { LocationPin } from "@/components/AllLocationsMap";
 import type { Prisma } from "@/generated/prisma";
 
 type SearchParams = {
@@ -109,37 +109,14 @@ export default async function ExplorePage({
         <ExploreFilters categories={categories} locations={locations} />
       </Suspense>
 
-      <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-stretch">
-        <div className="flex-1">
-          {providers.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
-              No providers match your filters. Try broadening your search.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {providers.map((provider) => (
-                <ProviderCard
-                  key={provider.id}
-                  provider={provider}
-                  isSaved={savedProviderIds.has(provider.id)}
-                  isEnrolled={enrolledProviderIds.has(provider.id)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-
-        {locationPins.length > 0 && (
-          <div className="flex h-72 flex-col lg:sticky lg:top-24 lg:h-auto lg:max-h-[calc(100vh-8rem)] lg:w-80 lg:shrink-0">
-            <h2 className="mb-3 text-lg font-bold text-slate-900">
-              Where these providers are located
-            </h2>
-            <div className="flex-1">
-              <AllLocationsMap pins={locationPins} />
-            </div>
-          </div>
-        )}
-      </div>
+      <ExploreResults
+        providers={providers.map((provider) => ({
+          ...provider,
+          isSaved: savedProviderIds.has(provider.id),
+          isEnrolled: enrolledProviderIds.has(provider.id),
+        }))}
+        locationPins={locationPins}
+      />
     </div>
   );
 }
