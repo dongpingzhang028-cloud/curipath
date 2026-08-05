@@ -7,7 +7,7 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [resetUrl, setResetUrl] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
         return;
       }
 
-      setResetUrl(`${window.location.origin}/reset-password?token=${data.resetToken}`);
+      setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -44,15 +44,10 @@ export default function ForgotPasswordPage() {
         </p>
       </div>
 
-      {resetUrl ? (
-        <div className="flex flex-col gap-3 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800">
-          <p>
-            No email is set up for this app yet, so here&apos;s your reset link directly. In
-            production this would be emailed to you instead.
-          </p>
-          <Link href={resetUrl} className="break-all font-medium text-indigo-600 hover:underline">
-            {resetUrl}
-          </Link>
+      {submitted ? (
+        <div className="rounded-xl bg-emerald-50 p-4 text-sm text-emerald-800">
+          If an account exists for that email, we&apos;ve sent a password reset link. Check your
+          inbox.
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

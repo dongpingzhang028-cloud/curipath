@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono, Baloo_2 } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
@@ -39,8 +40,25 @@ export default function RootLayout({
         <Providers>
           <NavBar />
           <main className="flex-1">{children}</main>
-          <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
-            CuriPath — find and book classes kids love.
+          <footer className="border-t border-slate-200 bg-white py-8 text-sm text-slate-500">
+            <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center sm:flex-row sm:justify-between sm:px-6 sm:text-left">
+              <div>
+                <p className="font-display text-base font-bold text-slate-900">🧭 CuriPath</p>
+                <p className="mt-1">Find and book classes kids love.</p>
+              </div>
+              <nav className="flex gap-4">
+                <Link href="/explore" className="hover:text-indigo-600">
+                  Explore Classes
+                </Link>
+                <Link href="/dashboard" className="hover:text-indigo-600">
+                  My Dashboard
+                </Link>
+                <Link href="/privacy" className="hover:text-indigo-600">
+                  Privacy Policy
+                </Link>
+              </nav>
+              <p>© {new Date().getFullYear()} CuriPath. All rights reserved.</p>
+            </div>
           </footer>
         </Providers>
       </body>

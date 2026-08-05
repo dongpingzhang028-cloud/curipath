@@ -1,9 +1,43 @@
+import { cache } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { formatAgeRange } from "@/lib/format";
 import { StarRating } from "@/components/StarRating";
+
+// Memoized per-request so generateMetadata and the page component below
+// share one DB query instead of two.
+const getProvider = cache((id: string) =>
+  prisma.provider.findUnique({ where: { id }, include: { category: true } }),
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const provider = await getProvider(id);
+
+  if (!provider) {
+    return { title: "Program not found — CuriPath" };
+  }
+
+  const description =
+    provider.bio || `${provider.name} in ${provider.location} — find and book on CuriPath.`;
+
+  return {
+    title: `${provider.name} — CuriPath`,
+    description,
+    openGraph: {
+      title: provider.name,
+      description,
+      images: [{ url: provider.imageUrl }],
+    },
+  };
+}
 
 export default async function ProviderDetailPage({
   params,
@@ -12,10 +46,7 @@ export default async function ProviderDetailPage({
 }) {
   const { id } = await params;
 
-  const provider = await prisma.provider.findUnique({
-    where: { id },
-    include: { category: true },
-  });
+  const provider = await getProvider(id);
 
   if (!provider) {
     notFound();
