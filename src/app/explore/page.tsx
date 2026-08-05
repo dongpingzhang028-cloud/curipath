@@ -44,7 +44,10 @@ export default async function ExplorePage({
     where.location = params.location;
   }
   if (params.q) {
-    where.OR = [{ name: { contains: params.q } }, { bio: { contains: params.q } }];
+    where.OR = [
+      { name: { contains: params.q, mode: "insensitive" } },
+      { bio: { contains: params.q, mode: "insensitive" } },
+    ];
   }
 
   const [categories, providers, providerLocations, savedProviders, enrollments] =

@@ -23,6 +23,7 @@ model User {
   children             Child[]
   savedProviders       SavedProvider[]
   enrollments          Enrollment[]
+  feedback             Feedback[]
 }
 
 model Child {
@@ -75,6 +76,17 @@ model Enrollment {
   createdAt  DateTime @default(now())
 
   @@unique([parentId, providerId])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+  email     String?
+  type      String   @default("feedback")
+  message   String
+  pageUrl   String?
+  createdAt DateTime @default(now())
 }
 
 model ProgramType {

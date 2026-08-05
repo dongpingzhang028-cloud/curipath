@@ -26,3 +26,40 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string): Prom
 
   return true;
 }
+
+const FEEDBACK_NOTIFICATION_TO = "curipath.contact@gmail.com";
+
+export async function sendFeedbackNotificationEmail(feedback: {
+  type: string;
+  message: string;
+  email: string | null;
+  pageUrl: string | null;
+}): Promise<boolean> {
+  if (!resend) {
+    console.error("RESEND_API_KEY is not set — cannot send feedback notification email.");
+    return false;
+  }
+
+  const typeLabel = feedback.type === "bug" ? "🐛 Issue report" : "💡 Suggestion";
+
+  const { error } = await resend.emails.send({
+    from: process.env.RESEND_FROM_EMAIL || "CuriPath <onboarding@resend.dev>",
+    to: FEEDBACK_NOTIFICATION_TO,
+    replyTo: feedback.email || undefined,
+    subject: `${typeLabel} — CuriPath feedback`,
+    html: `
+      <p><strong>Type:</strong> ${typeLabel}</p>
+      <p><strong>From:</strong> ${feedback.email || "anonymous"}</p>
+      <p><strong>Page:</strong> ${feedback.pageUrl || "unknown"}</p>
+      <p><strong>Message:</strong></p>
+      <p>${feedback.message.replace(/\n/g, "<br />")}</p>
+    `,
+  });
+
+  if (error) {
+    console.error("Failed to send feedback notification email:", error);
+    return false;
+  }
+
+  return true;
+}

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono, Baloo_2 } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { NavBar } from "@/components/NavBar";
+import { FeedbackButton } from "@/components/FeedbackButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,11 +45,11 @@ export default function RootLayout({
             <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 text-center sm:flex-row sm:justify-between sm:px-6 sm:text-left">
               <div>
                 <p className="font-display text-base font-bold text-slate-900">🧭 CuriPath</p>
-                <p className="mt-1">Find and book classes kids love.</p>
+                <p className="mt-1">Discover and book classes kids love.</p>
               </div>
               <nav className="flex gap-4">
                 <Link href="/explore" className="hover:text-indigo-600">
-                  Explore Classes
+                  Explore Programs
                 </Link>
                 <Link href="/dashboard" className="hover:text-indigo-600">
                   My Dashboard
@@ -56,6 +57,7 @@ export default function RootLayout({
                 <Link href="/privacy" className="hover:text-indigo-600">
                   Privacy Policy
                 </Link>
+                <FeedbackButton />
               </nav>
               <p>© {new Date().getFullYear()} CuriPath. All rights reserved.</p>
             </div>
