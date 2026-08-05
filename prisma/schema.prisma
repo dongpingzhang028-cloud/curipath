@@ -22,7 +22,6 @@ model User {
   resetTokenExpiresAt  DateTime?
   children             Child[]
   savedProviders       SavedProvider[]
-  calendarSyncs        CalendarSync[]
   enrollments          Enrollment[]
 }
 
@@ -32,7 +31,6 @@ model Child {
   parentId      String
   name          String
   birthYear     Int
-  calendarSyncs CalendarSync[]
 }
 
 model Provider {
@@ -54,7 +52,6 @@ model Provider {
   categoryId String?   @map("category")
   category   Category? @relation(fields: [categoryId], references: [id])
   savedBy    SavedProvider[]
-  calendarSyncs CalendarSync[]
   enrollments Enrollment[]
 }
 
@@ -67,21 +64,6 @@ model SavedProvider {
   createdAt  DateTime @default(now())
 
   @@unique([parentId, providerId])
-}
-
-model CalendarSync {
-  id         String   @id @default(cuid())
-  parent     User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
-  parentId   String
-  child      Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
-  childId    String
-  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
-  providerId String
-  startDate  DateTime
-  endDate    DateTime
-  startTime  String
-  endTime    String
-  createdAt  DateTime @default(now())
 }
 
 model Enrollment {
@@ -105,5 +87,6 @@ model Category {
   name      String     @unique
   slug      String     @unique
   icon      String
+  order     Int        @default(0)
   providers Provider[]
 }

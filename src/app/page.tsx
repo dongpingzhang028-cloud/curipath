@@ -9,7 +9,7 @@ export default async function Home() {
 
   const [categories, featuredProviders, providerLocations, savedProviders, enrollments] =
     await Promise.all([
-      prisma.category.findMany({ orderBy: { name: "asc" } }),
+      prisma.category.findMany({ orderBy: { order: "asc" } }),
       prisma.provider.findMany({
         take: 4,
         orderBy: { id: "asc" },

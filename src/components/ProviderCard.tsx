@@ -1,5 +1,4 @@
 import { SaveProviderButton } from "@/components/SaveProviderButton";
-import { SyncCalendarButton } from "@/components/SyncCalendarButton";
 import { EnrollButton } from "@/components/EnrollButton";
 import { ProviderQuickView } from "@/components/ProviderQuickView";
 
@@ -54,7 +53,6 @@ export function ProviderCard({
                 Book on the website
               </a>
             )}
-            <SyncCalendarButton providerId={provider.id} />
           </div>
         </div>
       </div>

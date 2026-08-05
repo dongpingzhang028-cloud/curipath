@@ -60,7 +60,6 @@ async function main() {
   console.log("Seeding database...");
 
   await prisma.savedProvider.deleteMany();
-  await prisma.calendarSync.deleteMany();
   await prisma.enrollment.deleteMany();
   await prisma.provider.deleteMany();
   await prisma.category.deleteMany();

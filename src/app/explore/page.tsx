@@ -42,7 +42,7 @@ export default async function ExplorePage({
 
   const [categories, providers, providerLocations, savedProviders, enrollments] =
     await Promise.all([
-      prisma.category.findMany({ orderBy: { name: "asc" } }),
+      prisma.category.findMany({ orderBy: { order: "asc" } }),
       prisma.provider.findMany({
         where,
         include: { category: true },

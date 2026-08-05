@@ -2,9 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { formatSessionTime } from "@/lib/format";
 import { AddChildForm } from "@/components/AddChildForm";
-import { BookingCalendar } from "@/components/BookingCalendar";
 import { ProviderCard } from "@/components/ProviderCard";
 
 export default async function DashboardPage() {
@@ -13,17 +11,13 @@ export default async function DashboardPage() {
     redirect("/login?callbackUrl=/dashboard");
   }
 
-  const [children, savedPrograms, calendarSyncs, enrollments] =
+  const [children, savedPrograms, enrollments] =
     await Promise.all([
       prisma.child.findMany({ where: { parentId: session.user.id }, orderBy: { name: "asc" } }),
       prisma.savedProvider.findMany({
         where: { parentId: session.user.id },
         include: { provider: { include: { category: true } } },
         orderBy: { createdAt: "desc" },
-      }),
-      prisma.calendarSync.findMany({
-        where: { parentId: session.user.id },
-        include: { child: true, provider: true },
       }),
       prisma.enrollment.findMany({
         where: { parentId: session.user.id },
@@ -35,34 +29,6 @@ export default async function DashboardPage() {
   const savedProviderIds = new Set(savedPrograms.map((sp) => sp.providerId));
   const enrolledProviderIds = new Set(enrollments.map((e) => e.providerId));
   const enrolledProviders = enrollments.map((e) => e.provider);
-
-  function timeOnDay(day: Date, time: string) {
-    const [hours, minutes] = time.split(":").map(Number);
-    const d = new Date(day);
-    d.setHours(hours, minutes, 0, 0);
-    return d;
-  }
-
-  const syncedEvents = calendarSyncs.flatMap((sync) => {
-    const events = [];
-    const day = new Date(sync.startDate);
-    while (day <= sync.endDate) {
-      const start = timeOnDay(day, sync.startTime);
-      const end = timeOnDay(day, sync.endTime);
-      events.push({
-        id: `${sync.id}-${day.toISOString().slice(0, 10)}`,
-        date: start.toISOString(),
-        title: sync.provider.name,
-        childId: sync.childId,
-        childName: sync.child.name,
-        time: formatSessionTime(start, end),
-      });
-      day.setDate(day.getDate() + 1);
-    }
-    return events;
-  });
-
-  const calendarEvents = syncedEvents;
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
@@ -86,17 +52,6 @@ export default async function DashboardPage() {
               </span>
             ))}
           </div>
-        )}
-      </section>
-
-      <section className="mt-10">
-        <h2 className="mb-4 text-lg font-bold text-slate-900">Calendar</h2>
-        {calendarEvents.length === 0 ? (
-          <p className="text-sm text-slate-500">
-            Programs you sync to your calendar will show up here.
-          </p>
-        ) : (
-          <BookingCalendar events={calendarEvents} />
         )}
       </section>
 
