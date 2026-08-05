@@ -24,10 +24,17 @@ export default async function ExplorePage({
   const where: Prisma.ProviderWhereInput = {};
 
   if (params.age) {
-    const age = Number(params.age);
-    if (!Number.isNaN(age)) {
-      where.minAge = { lte: age };
-      where.maxAge = { gte: age };
+    // params.age encodes a bucket range as "min-max" (e.g. "5-7"). Match any
+    // provider whose [minAge, maxAge] range overlaps the bucket at all,
+    // rather than requiring a single representative age to fall inside it —
+    // that point-check wrongly excluded providers like a 0-3 program from
+    // "Under 5", or a 15-18 program from "14+".
+    const [bucketMinStr, bucketMaxStr] = params.age.split("-");
+    const bucketMin = Number(bucketMinStr);
+    const bucketMax = Number(bucketMaxStr);
+    if (!Number.isNaN(bucketMin) && !Number.isNaN(bucketMax)) {
+      where.minAge = { lte: bucketMax };
+      where.maxAge = { gte: bucketMin };
     }
   }
   if (params.category) {

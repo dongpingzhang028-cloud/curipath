@@ -5,13 +5,16 @@ import { useState } from "react";
 
 type Category = { slug: string; name: string; icon: string };
 
+// Each value encodes the bucket's actual [min-max] age range (not a single
+// representative age), so filtering can check for real overlap with a
+// provider's [minAge, maxAge] instead of a single point falling inside it.
 const AGE_OPTIONS = [
   { label: "Any age", value: "" },
-  { label: "Under 5", value: "4" },
-  { label: "5–7", value: "6" },
-  { label: "8–10", value: "9" },
-  { label: "11–13", value: "12" },
-  { label: "14+", value: "14" },
+  { label: "Under 5", value: "0-4" },
+  { label: "5–7", value: "5-7" },
+  { label: "8–10", value: "8-10" },
+  { label: "11–13", value: "11-13" },
+  { label: "14+", value: "14-99" },
 ];
 
 export function ExploreFilters({
