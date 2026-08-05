@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Baloo_2 } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { NavBar } from "@/components/NavBar";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +44,7 @@ export default function RootLayout({
             CuriPath — find and book classes kids love.
           </footer>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
