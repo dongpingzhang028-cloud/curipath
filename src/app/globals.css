@@ -28,3 +28,30 @@ body {
 .font-display {
   font-family: var(--font-baloo), var(--font-geist-sans), sans-serif;
 }
+
+/* Google Maps InfoWindow ships with generous default padding/min-size on
+   its internal chrome that can't be reached via inline styles on our own
+   content (it lives outside our React tree). Trim it so popups with short
+   content (a thumbnail + a couple lines of text) don't show a large blank
+   gap below the content.
+   The biggest offender is .gm-style-iw-chr, a header strip Google always
+   reserves purely to host the close ("x") button, ~48px tall regardless of
+   content — collapse it to 0 and let the button float over the content
+   corner instead, so it no longer eats a big blank row up top. */
+.gm-style-iw-d {
+  overflow: hidden !important;
+}
+.gm-style-iw-c {
+  padding: 10px !important;
+}
+.gm-style-iw-chr {
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+.gm-style-iw-chr .gm-ui-hover-effect {
+  position: absolute !important;
+  top: 2px !important;
+  right: 2px !important;
+  z-index: 1;
+}

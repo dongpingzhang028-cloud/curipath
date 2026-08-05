@@ -80,21 +80,26 @@ export default async function ExplorePage({
 
   let locationPins: LocationPin[] = [];
   if (params.category) {
-    const addressGroups = new Map<string, { label: string; count: number }>();
+    const addressGroups = new Map<string, LocationPin["providers"]>();
     for (const p of providers) {
       const address = p.address ?? p.location;
-      const existing = addressGroups.get(address);
-      if (existing) {
-        existing.count += 1;
-      } else {
-        addressGroups.set(address, { label: p.name, count: 1 });
-      }
+      const group = addressGroups.get(address) ?? [];
+      group.push({
+        id: p.id,
+        name: p.name,
+        imageUrl: p.imageUrl,
+        categoryIcon: p.category?.icon ?? null,
+        categoryName: p.category?.name ?? null,
+        googleRating: p.googleRating,
+        minAge: p.minAge,
+        maxAge: p.maxAge,
+      });
+      addressGroups.set(address, group);
     }
-    locationPins = Array.from(addressGroups.entries()).map(([address, { label, count }]) => ({
+    locationPins = Array.from(addressGroups.entries()).map(([address, providersAtAddress]) => ({
       id: address,
-      label,
       address,
-      count,
+      providers: providersAtAddress,
     }));
   }
 

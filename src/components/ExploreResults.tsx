@@ -66,7 +66,7 @@ export function ExploreResults({
 
       {hasMap && (
         <div
-          className={`h-72 flex-col lg:sticky lg:top-24 lg:h-auto lg:max-h-[calc(100vh-8rem)] lg:w-80 lg:shrink-0 ${
+          className={`h-[70vh] flex-col lg:sticky lg:top-24 lg:h-auto lg:max-h-[calc(100vh-8rem)] lg:w-80 lg:shrink-0 ${
             view === "map" ? "flex" : "hidden"
           } lg:flex`}
         >
