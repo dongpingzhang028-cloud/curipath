@@ -11,6 +11,7 @@ type SearchParams = {
   age?: string;
   q?: string;
   location?: string;
+  trial?: string;
 };
 
 export default async function ExplorePage({
@@ -42,6 +43,9 @@ export default async function ExplorePage({
   }
   if (params.location) {
     where.location = params.location;
+  }
+  if (params.trial) {
+    where.hasFreeTrial = true;
   }
   if (params.q) {
     where.OR = [

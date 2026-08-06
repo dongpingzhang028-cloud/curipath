@@ -101,9 +101,23 @@ export function ExploreFilters({
         ))}
       </select>
 
+      <button
+        type="button"
+        onClick={() => updateParam("trial", searchParams.get("trial") ? "" : "1")}
+        aria-pressed={!!searchParams.get("trial")}
+        className={`rounded-full border px-3 py-2 text-sm font-medium transition ${
+          searchParams.get("trial")
+            ? "border-emerald-600 bg-emerald-600 text-white"
+            : "border-slate-300 bg-white text-slate-700 hover:border-slate-400"
+        }`}
+      >
+        🎁 Free trial
+      </button>
+
       {(searchParams.get("category") ||
         searchParams.get("age") ||
         searchParams.get("location") ||
+        searchParams.get("trial") ||
         searchParams.get("q")) && (
         <button
           onClick={() => {

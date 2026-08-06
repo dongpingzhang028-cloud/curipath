@@ -41,8 +41,8 @@ export default function PrivacyPage() {
           </ul>
           <p className="mt-2">
             We do not collect payment information — CuriPath doesn&apos;t process bookings or
-            payments directly; the &quot;Book on the website&quot; button takes you to the
-            provider&apos;s own site.
+            payments directly; the &quot;Book class&quot; button takes you to the provider&apos;s
+            own site.
           </p>
         </section>
 

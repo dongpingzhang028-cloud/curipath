@@ -52,6 +52,18 @@ export default async function ProviderDetailPage({
     notFound();
   }
 
+  // A provider "has a free trial" only when the flag is set; link to the
+  // dedicated trial page when there is one, otherwise fall back to their
+  // main site so the button still goes somewhere useful.
+  const freeTrialHref = provider.hasFreeTrial
+    ? provider.freeTrialUrl || provider.websiteUrl
+    : null;
+
+  // When the trial falls back to the main site, "Book class" would be a
+  // second button to the exact same place — show only the trial button.
+  const bookClassHref =
+    provider.websiteUrl && provider.websiteUrl !== freeTrialHref ? provider.websiteUrl : null;
+
   const detailedAddress = provider.address || provider.location;
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(detailedAddress)}`;
 
@@ -135,16 +147,33 @@ export default async function ProviderDetailPage({
             </div>
           )}
 
-          {provider.websiteUrl && (
+          {(freeTrialHref || bookClassHref) && (
             <div className="mt-2 flex flex-wrap items-center gap-2">
-              <a
-                href={provider.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700"
-              >
-                Book on the website
-              </a>
+              {freeTrialHref && (
+                <a
+                  href={freeTrialHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+                >
+                  <span aria-hidden>🎁</span>
+                  Book a free trial
+                </a>
+              )}
+              {bookClassHref && (
+                <a
+                  href={bookClassHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={
+                    freeTrialHref
+                      ? "inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400"
+                      : "inline-flex items-center gap-1.5 rounded-full border border-indigo-600 bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700"
+                  }
+                >
+                  Book class
+                </a>
+              )}
             </div>
           )}
 

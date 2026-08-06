@@ -19,6 +19,7 @@ export type ProviderCardData = {
   googleRating: number | null;
   reviewPros: string | null;
   reviewCons: string | null;
+  hasFreeTrial: boolean;
 };
 
 export function ProviderCard({
@@ -46,6 +47,13 @@ export function ProviderCard({
         {provider.category && (
           <span className="absolute left-2 top-2 rounded-full bg-white/90 px-2 py-1 text-xs font-medium text-slate-700 shadow-sm">
             {provider.category.icon} {provider.category.name}
+          </span>
+        )}
+        {provider.hasFreeTrial && (
+          // Diagonal corner ribbon. The parent Link is relative + overflow-hidden,
+          // so the over-wide band is clipped into a clean triangle at the corner.
+          <span className="absolute -right-9 top-4 w-36 rotate-45 bg-emerald-600 py-1 text-center text-[11px] font-bold uppercase tracking-wide text-white shadow-md">
+            Free trial
           </span>
         )}
       </Link>

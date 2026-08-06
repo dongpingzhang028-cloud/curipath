@@ -23,7 +23,7 @@ const baloo = Baloo_2({
 });
 
 export const metadata: Metadata = {
-  title: "CuriPath — Find and Book Kids' Classes",
+  title: "CuriPath - Helping Every Child Discover Their Next Passion.",
   description: "Browse and book art, sports, music, coding, and more classes for kids.",
 };
 

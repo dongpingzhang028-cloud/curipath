@@ -7,12 +7,17 @@ import { HeroSearch } from "@/components/HeroSearch";
 export default async function Home() {
   const session = await auth();
 
-  const [categories, featuredProviders, providerLocations, savedProviders, enrollments] =
+  const [categories, newProviders, providerLocations, savedProviders, enrollments] =
     await Promise.all([
       prisma.category.findMany({ orderBy: { order: "asc" } }),
+      // "New on CuriPath" — the 4 most recently added providers that offer a
+      // free trial. Provider has no createdAt column, but cuid ids embed a
+      // timestamp prefix and sort lexicographically by creation time, so
+      // ordering by id descending approximates newest-first.
       prisma.provider.findMany({
+        where: { hasFreeTrial: true },
         take: 4,
-        orderBy: { id: "asc" },
+        orderBy: { id: "desc" },
         include: { category: true },
       }),
       prisma.provider.findMany({
@@ -70,13 +75,13 @@ export default async function Home() {
 
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-slate-900">Featured Program</h2>
+          <h2 className="text-xl font-bold text-slate-900">New on CuriPath</h2>
           <Link href="/explore" className="text-sm font-medium text-indigo-600 hover:underline">
             See all →
           </Link>
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredProviders.map((provider) => (
+          {newProviders.map((provider) => (
             <ProviderCard
               key={provider.id}
               provider={provider}

@@ -50,6 +50,8 @@ model Provider {
   ratingSyncedAt DateTime?
   reviewPros String?
   reviewCons String?
+  hasFreeTrial Boolean @default(false)
+  freeTrialUrl String?
   categoryId String?   @map("category")
   category   Category? @relation(fields: [categoryId], references: [id])
   savedBy    SavedProvider[]
