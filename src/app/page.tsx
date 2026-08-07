@@ -44,10 +44,6 @@ export default async function Home() {
         : Promise.resolve([]),
     ]);
 
-  // When any category is still empty, every card reserves the tag row so the
-  // grid rows stay level; once none are empty the row disappears entirely.
-  const anyCategoryEmpty = categories.some((c) => c._count.providers === 0);
-
   const locations = providerLocations.map((p) => p.location);
   const savedProviderIds = new Set(savedProviders.map((s) => s.providerId));
   const enrolledProviderIds = new Set(enrollments.map((e) => e.providerId));
@@ -73,16 +69,15 @@ export default async function Home() {
             <Link
               key={category.id}
               href={`/explore?category=${category.slug}`}
-              className="flex flex-col items-center gap-2 rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+              className="relative flex flex-col items-center gap-2 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
             >
               <span className="text-3xl">{category.icon}</span>
               <span className="text-sm font-medium text-slate-700">{category.name}</span>
-              {anyCategoryEmpty && (
-                <span
-                  className={`rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700 ${
-                    category._count.providers === 0 ? "" : "invisible"
-                  }`}
-                >
+              {category._count.providers === 0 && (
+                // Diagonal corner ribbon, same trick as the free-trial ribbon on
+                // ProviderCard: the card is relative + overflow-hidden, so the
+                // over-wide rotated band is clipped into a triangle at the corner.
+                <span className="absolute -right-7 top-2.5 w-24 rotate-45 bg-amber-500 py-0.5 text-center text-[9px] font-bold uppercase tracking-wide text-white shadow-md">
                   Coming soon
                 </span>
               )}
