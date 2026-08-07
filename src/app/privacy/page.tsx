@@ -56,8 +56,10 @@ export default function PrivacyPage() {
             <li>Emailing you a password reset link when you request one.</li>
           </ul>
           <p className="mt-2">
-            We don&apos;t sell your information, and we don&apos;t currently run any advertising
-            or third-party analytics/tracking on CuriPath.
+            We don&apos;t sell your information, and we don&apos;t run any advertising on
+            CuriPath. We do measure overall site traffic using Vercel Web Analytics, which
+            counts page views without cookies and without building a profile of you across
+            sites &mdash; see below.
           </p>
         </section>
 
@@ -74,7 +76,18 @@ export default function PrivacyPage() {
             </li>
             <li>
               <span className="font-medium text-slate-900">Vercel</span> hosts and serves the
-              CuriPath website.
+              CuriPath website, and its Web Analytics measures how many people visit which
+              pages. It does not use cookies, does not store an identifier on your device, and
+              does not track you across other websites &mdash; see{" "}
+              <a
+                href="https://vercel.com/docs/analytics/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:underline"
+              >
+                Vercel&apos;s analytics privacy documentation
+              </a>
+              .
             </li>
             <li>
               <span className="font-medium text-slate-900">Google Maps</span> powers the map view
