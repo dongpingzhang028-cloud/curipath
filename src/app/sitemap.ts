@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
-const BASE_URL = "https://curipath.com";
+// Must be the canonical host: the apex domain 308-redirects to www, so
+// emitting apex URLs here makes every entry in the sitemap a redirect.
+const BASE_URL = "https://www.curipath.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const providers = await prisma.provider.findMany({
