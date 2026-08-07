@@ -9,7 +9,12 @@ export default async function Home() {
 
   const [categories, newProviders, providerLocations, savedProviders, enrollments] =
     await Promise.all([
-      prisma.category.findMany({ orderBy: { order: "asc" } }),
+      // _count drives the "Coming soon" tag below, so a category earns its way
+      // out of that state simply by having providers added to it.
+      prisma.category.findMany({
+        orderBy: { order: "asc" },
+        include: { _count: { select: { providers: true } } },
+      }),
       // "New on CuriPath" — the 4 most recently added providers that offer a
       // free trial. Provider has no createdAt column, but cuid ids embed a
       // timestamp prefix and sort lexicographically by creation time, so
@@ -38,6 +43,10 @@ export default async function Home() {
           })
         : Promise.resolve([]),
     ]);
+
+  // When any category is still empty, every card reserves the tag row so the
+  // grid rows stay level; once none are empty the row disappears entirely.
+  const anyCategoryEmpty = categories.some((c) => c._count.providers === 0);
 
   const locations = providerLocations.map((p) => p.location);
   const savedProviderIds = new Set(savedProviders.map((s) => s.providerId));
@@ -68,6 +77,15 @@ export default async function Home() {
             >
               <span className="text-3xl">{category.icon}</span>
               <span className="text-sm font-medium text-slate-700">{category.name}</span>
+              {anyCategoryEmpty && (
+                <span
+                  className={`rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700 ${
+                    category._count.providers === 0 ? "" : "invisible"
+                  }`}
+                >
+                  Coming soon
+                </span>
+              )}
             </Link>
           ))}
         </div>
