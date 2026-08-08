@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { formatAgeRange } from "@/lib/format";
 import { StarRating } from "@/components/StarRating";
+import { TrackedBookLink } from "@/components/TrackedBookLink";
 
 // Memoized per-request so generateMetadata and the page component below
 // share one DB query instead of two.
@@ -150,21 +151,27 @@ export default async function ProviderDetailPage({
           {(freeTrialHref || bookClassHref) && (
             <div className="mt-2 flex flex-wrap items-center gap-2">
               {freeTrialHref && (
-                <a
+                <TrackedBookLink
                   href={freeTrialHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  eventName="book_free_trial"
+                  providerId={provider.id}
+                  providerName={provider.name}
+                  city={provider.location}
+                  category={provider.category?.name ?? null}
                   className="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
                 >
                   <span aria-hidden>🎁</span>
                   Book a free trial
-                </a>
+                </TrackedBookLink>
               )}
               {bookClassHref && (
-                <a
+                <TrackedBookLink
                   href={bookClassHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  eventName="book_class"
+                  providerId={provider.id}
+                  providerName={provider.name}
+                  city={provider.location}
+                  category={provider.category?.name ?? null}
                   className={
                     freeTrialHref
                       ? "inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-400"
@@ -172,7 +179,7 @@ export default async function ProviderDetailPage({
                   }
                 >
                   Book class
-                </a>
+                </TrackedBookLink>
               )}
             </div>
           )}

@@ -57,9 +57,12 @@ export default function PrivacyPage() {
           </ul>
           <p className="mt-2">
             We don&apos;t sell your information, and we don&apos;t run any advertising on
-            CuriPath. We do measure overall site traffic using Vercel Web Analytics, which
-            counts page views without cookies and without building a profile of you across
-            sites &mdash; see below.
+            CuriPath. We do measure site traffic with two analytics tools: Vercel Web
+            Analytics, which counts page views without cookies, and Google Analytics 4, which
+            does use cookies. Alongside page views, we record when someone clicks
+            &ldquo;Book a free trial&rdquo; or &ldquo;Book class&rdquo; on a program page,
+            together with that program&apos;s name, city and category, so we can see which
+            programs families are interested in. Both are described below.
           </p>
         </section>
 
@@ -86,6 +89,31 @@ export default function PrivacyPage() {
                 className="text-indigo-600 hover:underline"
               >
                 Vercel&apos;s analytics privacy documentation
+              </a>
+              .
+            </li>
+            <li>
+              <span className="font-medium text-slate-900">Google Analytics 4</span> measures
+              page views and the booking-button clicks described above. Unlike Vercel
+              Analytics, it stores cookies on your device and shares usage data with Google
+              under{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:underline"
+              >
+                Google&apos;s privacy policy
+              </a>
+              . We never send Google your name, email address, or anything about your
+              children. You can opt out of Google Analytics on every site using Google&apos;s{" "}
+              <a
+                href="https://tools.google.com/dlpage/gaoptout"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:underline"
+              >
+                browser opt-out add-on
               </a>
               .
             </li>

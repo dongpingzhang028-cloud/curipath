@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono, Baloo_2 } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { NavBar } from "@/components/NavBar";
@@ -69,6 +70,7 @@ export default function RootLayout({
         </Providers>
         <Analytics />
       </body>
+      <GoogleAnalytics gaId="G-85DNM8L5QV" />
     </html>
   );
 }
