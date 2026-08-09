@@ -1,10 +1,22 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { ExploreFilters } from "@/components/ExploreFilters";
 import { ExploreResults } from "@/components/ExploreResults";
 import type { LocationPin } from "@/components/AllLocationsMap";
 import type { Prisma } from "@/generated/prisma";
+
+// The filters live in the query string (category, age, location, trial, q),
+// so this route can be reached through hundreds of permutations that all show
+// the same page. Canonicalising to the bare /explore consolidates them instead
+// of letting Google treat each combination as its own near-duplicate page.
+export const metadata: Metadata = {
+  title: "Explore Programs — CuriPath",
+  description:
+    "Browse kids' classes across Seattle and the Eastside by category, age, and location.",
+  alternates: { canonical: "/explore" },
+};
 
 type SearchParams = {
   category?: string;

@@ -32,6 +32,7 @@ export async function generateMetadata({
   return {
     title: `${provider.name} — CuriPath`,
     description,
+    alternates: { canonical: `/providers/${provider.id}` },
     openGraph: {
       title: provider.name,
       description,
