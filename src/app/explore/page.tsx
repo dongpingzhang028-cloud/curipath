@@ -85,30 +85,33 @@ export default async function ExplorePage({
   const savedProviderIds = new Set(savedProviders.map((s) => s.providerId));
   const enrolledProviderIds = new Set(enrollments.map((e) => e.providerId));
 
-  let locationPins: LocationPin[] = [];
-  if (params.category) {
-    const addressGroups = new Map<string, LocationPin["providers"]>();
-    for (const p of providers) {
-      const address = p.address ?? p.location;
-      const group = addressGroups.get(address) ?? [];
-      group.push({
-        id: p.id,
-        name: p.name,
-        imageUrl: p.imageUrl,
-        categoryIcon: p.category?.icon ?? null,
-        categoryName: p.category?.name ?? null,
-        googleRating: p.googleRating,
-        minAge: p.minAge,
-        maxAge: p.maxAge,
-      });
-      addressGroups.set(address, group);
-    }
-    locationPins = Array.from(addressGroups.entries()).map(([address, providersAtAddress]) => ({
+  // Pins mirror whatever the current filters return, so the map is available
+  // on every Explore view rather than only once a category is chosen — that
+  // gate was why the mobile List/Map toggle never appeared by default.
+  // Providers sharing an address collapse into one pin.
+  const addressGroups = new Map<string, LocationPin["providers"]>();
+  for (const p of providers) {
+    const address = p.address ?? p.location;
+    const group = addressGroups.get(address) ?? [];
+    group.push({
+      id: p.id,
+      name: p.name,
+      imageUrl: p.imageUrl,
+      categoryIcon: p.category?.icon ?? null,
+      categoryName: p.category?.name ?? null,
+      googleRating: p.googleRating,
+      minAge: p.minAge,
+      maxAge: p.maxAge,
+    });
+    addressGroups.set(address, group);
+  }
+  const locationPins: LocationPin[] = Array.from(addressGroups.entries()).map(
+    ([address, providersAtAddress]) => ({
       id: address,
       address,
       providers: providersAtAddress,
-    }));
-  }
+    }),
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
