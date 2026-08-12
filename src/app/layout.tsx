@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   // Canonical host, so relative Open Graph/Twitter image URLs resolve against
   // www rather than the apex domain that redirects to it.
   metadataBase: new URL("https://www.curipath.com"),
-  title: "CuriPath - Helping Every Child Discover Their Next Passion.",
+  title: "CuriPath — Discover Kids Classes and Free Trials",
   description: "Browse and book art, sports, music, coding, and more classes for kids.",
 };
 
