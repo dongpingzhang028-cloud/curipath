@@ -11,7 +11,7 @@ export default async function DashboardPage() {
     redirect("/login?callbackUrl=/dashboard");
   }
 
-  const [children, savedPrograms, enrollments] =
+  const [children, savedPrograms] =
     await Promise.all([
       prisma.child.findMany({ where: { parentId: session.user.id }, orderBy: { name: "asc" } }),
       prisma.savedProvider.findMany({
@@ -19,16 +19,8 @@ export default async function DashboardPage() {
         include: { provider: { include: { category: true } } },
         orderBy: { createdAt: "desc" },
       }),
-      prisma.enrollment.findMany({
-        where: { parentId: session.user.id },
-        include: { provider: { include: { category: true } } },
-        orderBy: { createdAt: "desc" },
-      }),
     ]);
 
-  const savedProviderIds = new Set(savedPrograms.map((sp) => sp.providerId));
-  const enrolledProviderIds = new Set(enrollments.map((e) => e.providerId));
-  const enrolledProviders = enrollments.map((e) => e.provider);
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
@@ -72,36 +64,12 @@ export default async function DashboardPage() {
                 key={provider.id}
                 provider={provider}
                 isSaved
-                isEnrolled={enrolledProviderIds.has(provider.id)}
               />
             ))}
           </div>
         )}
       </section>
 
-      <section className="mt-10">
-        <h2 className="mb-4 text-lg font-bold text-slate-900">Enrolled Programs</h2>
-        {enrolledProviders.length === 0 ? (
-          <p className="text-sm text-slate-500">
-            No enrolled programs yet.{" "}
-            <Link href="/explore" className="font-medium text-indigo-600 hover:underline">
-              Explore classes
-            </Link>{" "}
-            and mark one as enrolled.
-          </p>
-        ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {enrolledProviders.map((provider) => (
-              <ProviderCard
-                key={provider.id}
-                provider={provider}
-                isSaved={savedProviderIds.has(provider.id)}
-                isEnrolled={enrolledProviderIds.has(provider.id)}
-              />
-            ))}
-          </div>
-        )}
-      </section>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ProviderCard, type ProviderCardData } from "@/components/ProviderCard";
 import { AllLocationsMap, type LocationPin } from "@/components/AllLocationsMap";
 
-type ProviderWithFlags = ProviderCardData & { isSaved: boolean; isEnrolled: boolean };
+type ProviderWithFlags = ProviderCardData & { isSaved: boolean };
 
 export function ExploreResults({
   providers,
@@ -57,7 +57,6 @@ export function ExploreResults({
                 key={provider.id}
                 provider={provider}
                 isSaved={provider.isSaved}
-                isEnrolled={provider.isEnrolled}
               />
             ))}
           </div>

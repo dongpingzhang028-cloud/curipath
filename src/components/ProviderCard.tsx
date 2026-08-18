@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { SaveProviderButton } from "@/components/SaveProviderButton";
-import { EnrollButton } from "@/components/EnrollButton";
 import { StarRating } from "@/components/StarRating";
 import { formatAgeRange } from "@/lib/format";
 
@@ -25,11 +24,9 @@ export type ProviderCardData = {
 export function ProviderCard({
   provider,
   isSaved,
-  isEnrolled = false,
 }: {
   provider: ProviderCardData;
   isSaved: boolean;
-  isEnrolled?: boolean;
 }) {
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -84,7 +81,6 @@ export function ProviderCard({
         <div className="mt-auto flex flex-col gap-2 pt-2">
           <div className="flex flex-wrap items-center gap-2">
             <SaveProviderButton providerId={provider.id} initialSaved={isSaved} />
-            <EnrollButton providerId={provider.id} initialEnrolled={isEnrolled} />
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Link

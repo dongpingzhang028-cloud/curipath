@@ -86,22 +86,13 @@ export default async function ClassesLandingPage({
 
   const { city, phrase, category, providers, cityCounts, categoryCounts, allCategories } = data;
   const session = await auth();
-  const [savedProviders, enrollments] = await Promise.all([
-    session?.user?.id
-      ? prisma.savedProvider.findMany({
-          where: { parentId: session.user.id },
-          select: { providerId: true },
-        })
-      : Promise.resolve([]),
-    session?.user?.id
-      ? prisma.enrollment.findMany({
-          where: { parentId: session.user.id },
-          select: { providerId: true },
-        })
-      : Promise.resolve([]),
-  ]);
+  const savedProviders = session?.user?.id
+    ? await prisma.savedProvider.findMany({
+        where: { parentId: session.user.id },
+        select: { providerId: true },
+      })
+    : [];
   const savedIds = new Set(savedProviders.map((s) => s.providerId));
-  const enrolledIds = new Set(enrollments.map((e) => e.providerId));
 
   const trials = providers.filter((p) => p.hasFreeTrial);
   const rated = providers.filter((p) => p.googleRating != null);
@@ -216,7 +207,6 @@ export default async function ClassesLandingPage({
               key={provider.id}
               provider={provider}
               isSaved={savedIds.has(provider.id)}
-              isEnrolled={enrolledIds.has(provider.id)}
             />
           ))}
         </div>

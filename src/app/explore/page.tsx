@@ -66,7 +66,7 @@ export default async function ExplorePage({
     ];
   }
 
-  const [categories, providers, providerLocations, savedProviders, enrollments] =
+  const [categories, providers, providerLocations, savedProviders] =
     await Promise.all([
       prisma.category.findMany({ orderBy: { order: "asc" } }),
       prisma.provider.findMany({
@@ -85,17 +85,10 @@ export default async function ExplorePage({
             select: { providerId: true },
           })
         : Promise.resolve([]),
-      session?.user?.id
-        ? prisma.enrollment.findMany({
-            where: { parentId: session.user.id },
-            select: { providerId: true },
-          })
-        : Promise.resolve([]),
     ]);
 
   const locations = providerLocations.map((p) => p.location);
   const savedProviderIds = new Set(savedProviders.map((s) => s.providerId));
-  const enrolledProviderIds = new Set(enrollments.map((e) => e.providerId));
 
   // Pins mirror whatever the current filters return, so the map is available
   // on every Explore view rather than only once a category is chosen — that
@@ -149,7 +142,6 @@ export default async function ExplorePage({
         providers={providers.map((provider) => ({
           ...provider,
           isSaved: savedProviderIds.has(provider.id),
-          isEnrolled: enrolledProviderIds.has(provider.id),
         }))}
         locationPins={locationPins}
       />

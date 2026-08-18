@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   const session = await auth();
 
-  const [categories, newProviders, providerLocations, savedProviders, enrollments] =
+  const [categories, newProviders, providerLocations, savedProviders] =
     await Promise.all([
       // _count drives the "Coming soon" tag below, so a category earns its way
       // out of that state simply by having providers added to it.
@@ -41,17 +41,10 @@ export default async function Home() {
             select: { providerId: true },
           })
         : Promise.resolve([]),
-      session?.user?.id
-        ? prisma.enrollment.findMany({
-            where: { parentId: session.user.id },
-            select: { providerId: true },
-          })
-        : Promise.resolve([]),
     ]);
 
   const locations = providerLocations.map((p) => p.location);
   const savedProviderIds = new Set(savedProviders.map((s) => s.providerId));
-  const enrolledProviderIds = new Set(enrollments.map((e) => e.providerId));
 
   return (
     <div>
@@ -104,7 +97,6 @@ export default async function Home() {
               key={provider.id}
               provider={provider}
               isSaved={savedProviderIds.has(provider.id)}
-              isEnrolled={enrolledProviderIds.has(provider.id)}
             />
           ))}
         </div>
