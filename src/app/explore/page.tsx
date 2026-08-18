@@ -101,11 +101,18 @@ export default async function ExplorePage({
   // on every Explore view rather than only once a category is chosen — that
   // gate was why the mobile List/Map toggle never appeared by default.
   // Providers sharing an address collapse into one pin.
-  const addressGroups = new Map<string, LocationPin["providers"]>();
+  const addressGroups = new Map<
+    string,
+    { lat: number | null; lng: number | null; providers: LocationPin["providers"] }
+  >();
   for (const p of providers) {
     const address = p.address ?? p.location;
-    const group = addressGroups.get(address) ?? [];
-    group.push({
+    const group = addressGroups.get(address) ?? {
+      lat: p.latitude,
+      lng: p.longitude,
+      providers: [],
+    };
+    group.providers.push({
       id: p.id,
       name: p.name,
       imageUrl: p.imageUrl,
@@ -118,10 +125,12 @@ export default async function ExplorePage({
     addressGroups.set(address, group);
   }
   const locationPins: LocationPin[] = Array.from(addressGroups.entries()).map(
-    ([address, providersAtAddress]) => ({
+    ([address, group]) => ({
       id: address,
       address,
-      providers: providersAtAddress,
+      lat: group.lat,
+      lng: group.lng,
+      providers: group.providers,
     }),
   );
 

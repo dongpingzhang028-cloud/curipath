@@ -14,7 +14,16 @@ export type PinProvider = {
   maxAge: number | null;
 };
 
-export type LocationPin = { id: string; address: string; providers: PinProvider[] };
+export type LocationPin = {
+  id: string;
+  address: string;
+  // Stored coordinates from the DB. Pins without them are skipped — the map
+  // must never fall back to the client-side Geocoding API (geocoding every
+  // pin per visit once produced a surprise bill).
+  lat: number | null;
+  lng: number | null;
+  providers: PinProvider[];
+};
 
 const US_CENTER = { lat: 39.8283, lng: -98.5795 };
 
@@ -25,32 +34,20 @@ function Markers({ pins }: { pins: LocationPin[] }) {
   useEffect(() => {
     if (!map) return;
 
-    let cancelled = false;
-    const geocoder = new google.maps.Geocoder();
     const infoWindow = new google.maps.InfoWindow();
 
     markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = [];
 
-    Promise.all(
-      pins.map(
-        (pin) =>
-          new Promise<{ pin: LocationPin; position: google.maps.LatLng } | null>((resolve) => {
-            geocoder.geocode({ address: pin.address }, (results, status) => {
-              if (status === "OK" && results?.[0]) {
-                resolve({ pin, position: results[0].geometry.location });
-              } else {
-                resolve(null);
-              }
-            });
-          }),
-      ),
-    ).then((resolved) => {
-      if (cancelled) return;
-
-      const found = resolved.filter(
-        (r): r is { pin: LocationPin; position: google.maps.LatLng } => r !== null,
-      );
+    // Positions come straight from stored provider coordinates — no
+    // Geocoding API calls in the browser, ever.
+    const found = pins
+      .filter((pin) => pin.lat != null && pin.lng != null)
+      .map((pin) => ({
+        pin,
+        position: new google.maps.LatLng(pin.lat!, pin.lng!),
+      }));
+    {
       const bounds = new google.maps.LatLngBounds();
 
       const markers = found.map(({ pin, position }) => {
@@ -98,10 +95,9 @@ function Markers({ pins }: { pins: LocationPin[] }) {
       } else if (found.length > 1) {
         map.fitBounds(bounds, 48);
       }
-    });
+    }
 
     return () => {
-      cancelled = true;
       markersRef.current.forEach((m) => m.setMap(null));
     };
   }, [map, pins]);

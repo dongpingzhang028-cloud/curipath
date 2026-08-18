@@ -41,6 +41,11 @@ model Provider {
   imageUrl   String
   location   String
   address    String?
+  // Geocoded once at data entry and served to the map from the DB -- the
+  // browser must never call the Geocoding API (a per-visit geocode of every
+  // pin once produced a surprise bill). Null = pin omitted from the map.
+  latitude   Float?
+  longitude  Float?
   minAge     Int?      @map("min_age")
   maxAge     Int?      @map("max_age")
   websiteUrl String?   @map("websiteURL")
