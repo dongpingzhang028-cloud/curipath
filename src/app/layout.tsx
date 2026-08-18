@@ -51,6 +51,12 @@ export default function RootLayout({
               <div>
                 <p className="font-display text-base font-bold text-slate-900">🧭 CuriPath</p>
                 <p className="mt-1">Discover and book classes kids love.</p>
+                <a
+                  href="mailto:curipath.contact@gmail.com"
+                  className="mt-1 inline-block hover:text-indigo-600"
+                >
+                  ✉️ curipath.contact@gmail.com
+                </a>
               </div>
               <nav className="flex gap-4">
                 <Link href="/explore" className="hover:text-indigo-600">
